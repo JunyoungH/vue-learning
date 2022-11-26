@@ -30,7 +30,7 @@ export default {
             return !this.email || !this.password
         }
     },
-    method: {
+    methods: {
         onSubmit() {
             console.log(this.email, this.password)
         }
