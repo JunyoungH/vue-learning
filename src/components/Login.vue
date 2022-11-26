@@ -29,6 +29,11 @@ export default {
         invalidForm() {
             return !this.email || !this.password
         }
+    },
+    method: {
+        onSubmit() {
+            console.log(this.email, this.password)
+        }
     }
 }
 </script>
