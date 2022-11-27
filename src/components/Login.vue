@@ -8,7 +8,7 @@
             </div>
             <div>
                 <label for="password">Password</label>
-                <input class="form-control" type="password" v-model="password" placeholder="e.g., 1223123" />
+                <input class="form-control" type="password" v-model="password" placeholder="e.g., 123123" />
             </div>
             <button class="btn" :class="{ 'btn-success': !invalidForm }" type="submit" :disabled="invalidForm">Log In</button>
        </form>
@@ -16,13 +16,16 @@
     </main>
 </template>
 <script>
+import { auth, setAuthHeader } from '../api'
+
 export default {
     data() {
         return {
             email: '',
             password: '',
             returnPath: '',
-            error: ''
+            error: '',
+            rPath: ''
         }
     },
     computed: {
@@ -30,9 +33,19 @@ export default {
             return !this.email || !this.password
         }
     },
+    created() {
+        this.rPath = this.$route.query.rPath
+    },
     methods: {
-        onSubmit() {
-            console.log(this.email, this.password)
+        async onSubmit() {
+            try {
+                const { accessToken } = await auth.login(this.email, this.password)
+                localStorage.setItem('token', accessToken)
+                setAuthHeader(accessToken)
+                this.$router.push(this.rPath)
+            } catch (error) {
+                this.error = error.data.error
+            }
         }
     }
 }
